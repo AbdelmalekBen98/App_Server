@@ -15,9 +15,9 @@ import java.net.*;
 import java.io.*;
 
 public class Server 
-{	PrintWriter out;
+{	DataInputStream in;
 	ServerSocket server ;
-	 BufferedReader in;
+	 DataOutputStream out;
 	Socket socket ;
 	
 	/*public Server(int port)
@@ -54,47 +54,55 @@ public class Server
 					e.printStackTrace();
 					}
 }*/
-        public Server(int port)
+  public Server(int port)
         {
-            try{
-    server = new ServerSocket(2000); 
-  } catch (IOException e) {
-    System.out.println("Could not listen on port 2000");
-    System.exit(-1);
-  }
+           try{
+                server = new ServerSocket(2000); 
+              } 
+           catch (IOException e) 
+              {
+                  
+                System.out.println("Could not listen on port 2000");
+                System.exit(-1);
+              }
 
 
-  try{
-    socket = server.accept();
-  } catch (IOException e) {
-    System.out.println("Accept failed: 2000");
-    System.exit(-1);
-  }
+              try{
+                    socket = server.accept();
+              } 
+              catch (IOException e) 
+              {
+                  
+                System.out.println("Accept failed: 2000");
+                System.exit(-1);
+              }
 
 
-  try{
-   in = new BufferedReader(new InputStreamReader(
-                           socket.getInputStream()));
-   out = new PrintWriter(socket.getOutputStream(), 
-                         true);
-  } catch (IOException e) {
-    System.out.println("Read failed");
-    System.exit(-1);
-  }
+              try
+              {
+               in = new DataInputStream(socket.getInputStream());
+               out = new DataOutputStream(socket.getOutputStream());
+              } 
+              catch (IOException e)
+              {
+                System.out.println(" failed");
+                System.exit(-1);
+              }
 
+              String MyMsg="";
 
-
-    while(true){
-      try{
-       String line = in.readLine();
-//Send data back to client
-        out.println(line);
-      } catch (IOException e) {
-        System.out.println("Read failed");
-        System.exit(-1);
-      }
-        }
-}
+                while(!MyMsg.equals("exit()"))
+                {
+                    try{
+                       MyMsg=in.readUTF();
+                         //Send data back to client
+                         //out.println(line);
+                       } catch (IOException e) {
+                         System.out.println("Read failed");
+                         System.exit(-1);
+                       }
+                }
+            }
 	public String getMyIP()
 	{ InetAddress ip; String s="127.0.0.1";
 	try{
